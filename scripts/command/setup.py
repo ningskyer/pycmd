@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name='pysh-commands-command',
+    name='pycmd-commands-command',
     version='0.1',
     py_modules=['command'],
     include_package_data=True,

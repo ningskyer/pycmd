@@ -3,11 +3,12 @@ from pip.req import parse_requirements
 
 install_reqs = parse_requirements('requirements.txt', session=False)
 
+app_name = 'pycmd'
+app_scripts = 'scripts'
 version = '0.0.1'
 
-
 setup(
-    name='pycmd',
+    name=app_name,
     version=version,
     description="""sth.""",
     classifiers=[
@@ -18,7 +19,8 @@ setup(
     keywords='',
     author='ningskyer',
     author_email='ningskyer@qq.com',
-    packages=find_packages(),
+    packages=find_packages(app_name, app_scripts),
+    package_dir = {'':app_name},
     entry_points='''
     [console_scripts]
     pycmd=pycmd.cli

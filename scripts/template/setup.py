@@ -1,15 +1,15 @@
 from setuptools import setup
 
 setup(
-    name='pysh-commands-shell',
+    name='pycmd-commands-template',
     version='0.1',
-    py_modules=['shell'],
+    py_modules=['template'],
     include_package_data=True,
     install_requires=[
-        'click',
+        'click'
     ],
     entry_points='''
         [console_scripts]
-        shell=shell:cli
+        template=template:cli
     ''',
 )
