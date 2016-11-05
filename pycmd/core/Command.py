@@ -1,4 +1,4 @@
-import BaseCommand
+from .baseCommand import BaseCommand
 
 class Command(BaseCommand):
     """Commands are the basic building block of command line interfaces in

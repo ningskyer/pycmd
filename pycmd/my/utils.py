@@ -1,7 +1,6 @@
 import os
 import sys
 
-from .globals import resolve_color_default
 
 from ._compat import text_type, open_stream, get_filesystem_encoding, \
     get_streerror, string_types, PY2, binary_streams, text_streams, \
@@ -11,13 +10,146 @@ from ._compat import text_type, open_stream, get_filesystem_encoding, \
 if not PY2:
     from ._compat import _find_binary_writer
 elif WIN:
-    from ._winconsole import _get_windows_argv, \
-         _hash_py_argv, _initial_argv_hash
+    from ._winconsole import _get_windows_argv, _hash_py_argv, _initial_argv_hash
 
 
 echo_native_types = string_types + (bytes, bytearray)
+#[[----------core
+
+def _bashcomplete(cmd, prog_name, complete_var=None):
+    """Internal handler for the bash completion support."""
+    if complete_var is None:
+        complete_var = '_%s_COMPLETE' % (prog_name.replace('-', '_')).upper()
+    complete_instr = os.environ.get(complete_var)
+    if not complete_instr:
+        return
+
+    # from ._bashcomplete import bashcomplete
+    if bashcomplete(cmd, prog_name, complete_var, complete_instr):
+        sys.exit(1)
 
 
+def _check_multicommand(base_command, cmd_name, cmd, register=False):
+    if not base_command.chain or not isinstance(cmd, MultiCommand):
+        return
+    if register:
+        hint = 'It is not possible to add multi commands as children to ' \
+               'another multi command that is in chain mode'
+    else:
+        hint = 'Found a multi command as subcommand to a multi command ' \
+               'that is in chain mode.  This is not supported'
+    raise RuntimeError('%s.  Command "%s" is set to chain and "%s" was '
+                       'added as subcommand but it in itself is a '
+                       'multi command.  ("%s" is a %s within a chained '
+                       '%s named "%s").  This restriction was supposed to '
+                       'be lifted in 6.0 but the fix was flawed.  This '
+                       'will be fixed in Click 7.0' % (
+                           hint, base_command.name, cmd_name,
+                           cmd_name, cmd.__class__.__name__,
+                           base_command.__class__.__name__,
+                           base_command.name))
+
+
+def batch(iterable, batch_size):
+    return list(zip(*repeat(iter(iterable), batch_size)))
+
+
+def invoke_param_callback(callback, ctx, param, value):
+    code = getattr(callback, '__code__', None)
+    args = getattr(code, 'co_argcount', 3)
+
+    if args < 3:
+        # This will become a warning in Click 3.0:
+        from warnings import warn
+        warn(Warning('Invoked legacy parameter callback "%s".  The new '
+                     'signature for such callbacks starting with '
+                     'click 2.0 is (ctx, param, value).'
+                     % callback), stacklevel=3)
+        return callback(ctx, value)
+    return callback(ctx, param, value)
+
+
+@contextmanager
+def augment_usage_errors(ctx, param=None):
+    """Context manager that attaches extra information to exceptions that
+    fly.
+    """
+    try:
+        yield
+    except BadParameter as e:
+        if e.ctx is None:
+            e.ctx = ctx
+        if param is not None and e.param is None:
+            e.param = param
+        raise
+    except UsageError as e:
+        if e.ctx is None:
+            e.ctx = ctx
+        raise
+
+
+def iter_params_for_processing(invocation_order, declaration_order):
+    """Given a sequence of parameters in the order as should be considered
+    for processing and an iterable of parameters that exist, this returns
+    a list in the correct order as they should be processed.
+    """
+    def sort_key(item):
+        try:
+            idx = invocation_order.index(item)
+        except ValueError:
+            idx = float('inf')
+        return (not item.is_eager, idx)
+
+    return sorted(declaration_order, key=sort_key)
+
+#----------------]]
+#[[----------global
+
+def get_current_context(silent=False):
+    """Returns the current click context.  This can be used as a way to
+    access the current context object from anywhere.  This is a more implicit
+    alternative to the :func:`pass_context` decorator.  This function is
+    primarily useful for helpers such as :func:`echo` which might be
+    interested in changing it's behavior based on the current context.
+
+    To push the current context, :meth:`Context.scope` can be used.
+
+    .. versionadded:: 5.0
+
+    :param silent: is set to `True` the return value is `None` if no context
+                   is available.  The default behavior is to raise a
+                   :exc:`RuntimeError`.
+    """
+    try:
+        return getattr(_local, 'stack')[-1]
+    except (AttributeError, IndexError):
+        if not silent:
+            raise RuntimeError('There is no active click context.')
+
+
+def push_context(ctx):
+    """Pushes a new context to the current stack."""
+    _local.__dict__.setdefault('stack', []).append(ctx)
+
+
+def pop_context():
+    """Removes the top level from the stack."""
+    _local.stack.pop()
+
+
+def resolve_color_default(color=None):
+    """"Internal helper to get the default value of the color flag.  If a
+    value is passed it's returned unchanged, otherwise it's looked up from
+    the current context.
+    """
+    if color is not None:
+        return color
+    ctx = get_current_context(silent=True)
+    if ctx is not None:
+        return ctx.color
+
+#------]]
+#
 def _posixify(name):
     return '-'.join(name.split()).lower()
 

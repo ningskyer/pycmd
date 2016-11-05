@@ -2,11 +2,7 @@ import sys
 import inspect
 
 from functools import update_wrapper
-
-from ._compat import iteritems
-from ._unicodefun import _check_for_unicode_literals
-from .utils import echo
-from .globals import get_current_context
+from .utils import echo,get_current_context
 
 
 def pass_context(f):
@@ -71,9 +67,9 @@ def _make_command(f, name, attrs, cls):
         raise TypeError('Attempted to convert a callback into a '
                         'command twice.')
     try:
-        params = f.__click_params__
+        params = f.__app_params__
         params.reverse()
-        del f.__click_params__
+        del f.__app_params__
     except AttributeError:
         params = []
     help = attrs.get('help')
@@ -84,7 +80,7 @@ def _make_command(f, name, attrs, cls):
     else:
         help = inspect.cleandoc(help)
     attrs['help'] = help
-    _check_for_unicode_literals()
+    # _check_for_unicode_literals()
     return cls(name=name or f.__name__.lower(),
                callback=f, params=params, **attrs)
 
@@ -131,9 +127,9 @@ def _param_memo(f, param):
     if isinstance(f, Command):
         f.params.append(param)
     else:
-        if not hasattr(f, '__click_params__'):
-            f.__click_params__ = []
-        f.__click_params__.append(param)
+        if not hasattr(f, '__app_params__'):
+            f.__app_params__ = []
+        f.__app_params__.append(param)
 
 
 def argument(*param_decls, **attrs):
@@ -301,6 +297,4 @@ def help_option(*param_decls, **attrs):
 
 
 # Circular dependencies between core and decorators
-from .core.command import Command
-from .core.group import Group
-from .core.parameter import Argument,Option
+from .core import Command, Group, Argument, Option

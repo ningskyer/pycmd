@@ -4,7 +4,7 @@
 - Dont talk much unless -v;
 - Output can be input;
 - Easy to make scripts;#自动发现
-- Easy to use scripts;#path
+- Easy to use scripts;#单入口、可嵌套
 - Easy to configure scripts;#自动加载
 - Easy to chain scripts
 
@@ -12,9 +12,8 @@
 pycmd [--h]
 pycmd load [FooPackage]
 pycmd FooPackage --h
-pycmd FooPackage Command --h
-pycmd FooPackage Command SubCommand --h
-pycmd FooPackage Command SubCommand Arg1 Arg2 Option1 Option2
+pycmd FooPackage Command1 --h
+pycmd FooPackage Command2 Arg1 Arg2 Option1 Option2
 
 
 ##pycmd

@@ -1,4 +1,5 @@
 
+
 class BaseCommand(object):
     """The base command implements the minimal API contract of commands.
     Most code will never use this as it does not implement a lot of useful

@@ -15,4 +15,4 @@ if command -v 'cygpath' >/dev/null 2>&1; then
 fi
 
 dir=$(echo $dir | sed 's/ /\ /g')
-python "${dir}/../pycmd.py" $*
+python "${dir}/../app.py" $*

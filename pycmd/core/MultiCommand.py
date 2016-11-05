@@ -1,4 +1,5 @@
-import Command
+from .command import Command
+from .globals import *
 
 class MultiCommand(Command):
     """A multi command is the basic implementation of a command that

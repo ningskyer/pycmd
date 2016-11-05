@@ -1,2 +1,2 @@
 @ECHO OFF
-python "%~dp0../pycmd.py" %*
+python "%~dp0../app.py" %*
