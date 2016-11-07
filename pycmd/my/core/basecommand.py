@@ -1,4 +1,10 @@
+import os, sys
 
+from _compat import iteritems, PY2
+from _unicodefun import _verify_python3_env, _check_for_unicode_literals
+from utils import get_os_args, make_str, _bashcomplete
+from exceptions import Abort, ClickException
+from .context import Context
 
 class BaseCommand(object):
     """The base command implements the minimal API contract of commands.
@@ -63,9 +69,11 @@ class BaseCommand(object):
         for key, value in iteritems(self.context_settings):
             if key not in extra:
                 extra[key] = value
+        
         ctx = Context(self, info_name=info_name, parent=parent, **extra)
         with ctx.scope(cleanup=False):
             self.parse_args(ctx, args)
+        print('after parse_args')
         return ctx
 
     def parse_args(self, ctx, args):
@@ -137,23 +145,28 @@ class BaseCommand(object):
         # completion is actually enabled, otherwise this is quite a fast
         # noop.
         _bashcomplete(self, prog_name, complete_var)
-
         try:
             try:
+                print("2shittttttttttuuuuuuuuuuu")
                 with self.make_context(prog_name, args, **extra) as ctx:
+                    print("3shittttttttttuuuuuuuuuuu")
+
                     rv = self.invoke(ctx)
                     if not standalone_mode:
                         return rv
                     ctx.exit()
             except (EOFError, KeyboardInterrupt):
+                print("33333")
                 echo(file=sys.stderr)
                 raise Abort()
             except ClickException as e:
+                print("444444")
                 if not standalone_mode:
                     raise
                 e.show()
                 sys.exit(e.exit_code)
         except Abort:
+            print("5555555555")
             if not standalone_mode:
                 raise
             echo('Aborted!', file=sys.stderr)

@@ -3,10 +3,10 @@ import inspect
 
 from functools import update_wrapper
 
-from ._compat import iteritems
-from ._unicodefun import _check_for_unicode_literals
-from .utils import echo
-from .globals import get_current_context
+from _compat import iteritems
+from _unicodefun import _check_for_unicode_literals
+from utils import echo
+from globals import get_current_context
 
 
 def pass_context(f):
@@ -88,6 +88,38 @@ def _make_command(f, name, attrs, cls):
     return cls(name=name or f.__name__.lower(),
                callback=f, params=params, **attrs)
 
+def _make_command2(f, name, attrs):
+    if isinstance(f, Command):
+        raise TypeError('Attempted to convert a callback into a '
+                        'command twice.')
+    try:
+        params = f.__click_params__
+        params.reverse()
+        del f.__click_params__
+    except AttributeError:
+        params = []
+    help = attrs.get('help')
+    if help is None:
+        help = inspect.getdoc(f)
+        if isinstance(help, bytes):
+            help = help.decode('utf-8')
+    else:
+        help = inspect.cleandoc(help)
+    attrs['help'] = help
+    _check_for_unicode_literals()
+    return Command(name=name or f.__name__.lower(),
+               callback=f, params=params, **attrs)
+
+def fuck_command(name=None, **attrs):
+    def decorator(f):
+        a = locals()
+        print(a)
+        cmd = _make_command2(f, name, attrs)
+        print(inspect.getargspec(f)[0])
+        
+        cmd.__doc__ = f.__doc__
+        return cmd
+    return decorator
 
 def command(name=None, cls=None, **attrs):
     """Creates a new :class:`Command` and uses the decorated function as
@@ -301,6 +333,4 @@ def help_option(*param_decls, **attrs):
 
 
 # Circular dependencies between core and decorators
-from .core.command import Command
-from .core.group import Group
-from .core.parameter import Argument,Option
+from core import Command, Group, Argument, Option

@@ -13,10 +13,10 @@ import os
 import sys
 import time
 import math
-from ._compat import _default_text_stdout, range_type, PY2, isatty, \
+from _compat import _default_text_stdout, range_type, PY2, isatty, \
      open_stream, strip_ansi, term_len, get_best_encoding, WIN
-from .utils import echo
-from .exceptions import ClickException
+from utils import echo
+from exceptions import ClickException
 
 
 if os.name == 'nt':

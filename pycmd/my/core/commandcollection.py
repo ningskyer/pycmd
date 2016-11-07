@@ -1,4 +1,4 @@
-from .multiCommand import MultiCommand
+from .multicommand import MultiCommand
 
 class CommandCollection(MultiCommand):
     """A command collection is a multi command that merges multiple multi

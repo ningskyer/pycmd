@@ -2,7 +2,7 @@ import os
 import sys
 import codecs
 
-from ._compat import PY2
+from _compat import PY2
 
 
 # If someone wants to vendor click, we want to ensure the

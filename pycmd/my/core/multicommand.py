@@ -1,5 +1,6 @@
 from .command import Command
-from .globals import *
+from globals import *
+from utils import echo
 
 class MultiCommand(Command):
     """A multi command is the basic implementation of a command that
@@ -117,11 +118,13 @@ class MultiCommand(Command):
                 formatter.write_dl(rows)
 
     def parse_args(self, ctx, args):
+        print("in multi parse_args")
         if not args and self.no_args_is_help and not ctx.resilient_parsing:
             echo(ctx.get_help(), color=ctx.color)
             ctx.exit()
-
         rest = Command.parse_args(self, ctx, args)
+        print("after Command parse_args")
+
         if self.chain:
             ctx.protected_args = rest
             ctx.args = []

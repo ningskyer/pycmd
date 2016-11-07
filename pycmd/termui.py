@@ -2,12 +2,12 @@ import os
 import sys
 import struct
 
-from ._compat import raw_input, text_type, string_types, \
+from _compat import raw_input, text_type, string_types, \
      isatty, strip_ansi, get_winterm_size, DEFAULT_COLUMNS, WIN
-from .utils import echo
-from .exceptions import Abort, UsageError
-from .types import convert_type
-from .globals import resolve_color_default
+from utils import echo
+from exceptions import Abort, UsageError
+from cmdtypes import convert_type
+from globals import resolve_color_default
 
 
 # The prompt functions to use.  The doc tools currently override these

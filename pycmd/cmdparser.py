@@ -17,7 +17,7 @@
 """
 import re
 from collections import deque
-from .exceptions import UsageError, NoSuchOption, BadOptionUsage, \
+from exceptions import UsageError, NoSuchOption, BadOptionUsage, \
      BadArgumentUsage
 
 

@@ -1,4 +1,9 @@
-from ..cmdtypes import convert_type, IntRange, BOOL
+from cmdtypes import convert_type, IntRange, BOOL
+from globals import _missing
+from _compat import isidentifier
+from cmdparser import split_opt
+from formatting import join_options
+from utils import iter_params_for_processing, augment_usage_errors
 
 class Parameter(object):
     """A parameter to a command comes in two versions: they are either

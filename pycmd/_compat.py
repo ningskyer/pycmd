@@ -527,7 +527,7 @@ if WIN:
     # Windows has a smaller terminal
     DEFAULT_COLUMNS = 79
 
-    from ._winconsole import _get_windows_console_stream
+    from _winconsole import _get_windows_console_stream
 
     def _get_argv_encoding():
         import locale

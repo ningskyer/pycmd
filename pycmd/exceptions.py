@@ -1,5 +1,5 @@
-from ._compat import PY2, filename_to_ui, get_text_stderr
-from .utils import echo
+from _compat import PY2, filename_to_ui, get_text_stderr
+from utils import echo
 
 
 class ClickException(Exception):

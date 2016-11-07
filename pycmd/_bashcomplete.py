@@ -1,8 +1,8 @@
 import os
 import re
-from .utils import echo
-from .parser import split_arg_string
-from .core import MultiCommand, Option
+from utils import echo
+from cmdparser import split_arg_string
+from core import MultiCommand, Option
 
 
 COMPLETION_SCRIPT = '''

@@ -4,7 +4,7 @@ import shutil
 import tempfile
 import contextlib
 
-from ._compat import iteritems, PY2
+from _compat import iteritems, PY2
 
 
 # If someone wants to vendor click, we want to ensure the

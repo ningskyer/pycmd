@@ -1,7 +1,7 @@
 from contextlib import contextmanager
-from .termui import get_terminal_size
-from .parser import split_opt
-from ._compat import term_len
+from termui import get_terminal_size
+from cmdparser import split_opt
+from _compat import term_len
 
 
 # Can force a width.  This is used by the test system
@@ -42,7 +42,7 @@ def wrap_text(text, width=78, initial_indent='', subsequent_indent='',
     :param preserve_paragraphs: if this flag is set then the wrapping will
                                 intelligently handle paragraphs.
     """
-    from ._textwrap import TextWrapper
+    from _textwrap import TextWrapper
     text = text.expandtabs()
     wrapper = TextWrapper(width, initial_indent=initial_indent,
                           subsequent_indent=subsequent_indent,

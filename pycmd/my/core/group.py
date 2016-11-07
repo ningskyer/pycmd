@@ -1,4 +1,4 @@
-from .multiCommand import MultiCommand
+from .multicommand import MultiCommand
 
 class Group(MultiCommand):
     """A group allows a command to have subcommands attached.  This is the

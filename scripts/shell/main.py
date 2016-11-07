@@ -1,7 +1,13 @@
 import os
 import click
+from pycmd.core import Group
 
-
+class Shell(Group):
+    """docstring for Shell"""
+    def __init__(self, arg):
+        super(Shell, self).__init__()
+        self.arg = arg
+        
 @click.group()
 def cli():
     pass
@@ -181,6 +187,3 @@ in human friendly way'''
 @click.argument('file')
 def size(file):
     click.echo(os.path.getsize(file))
-
-if __name__ == '__main__':
-    cli()

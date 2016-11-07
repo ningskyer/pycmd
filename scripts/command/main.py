@@ -1,23 +1,23 @@
 import os
 import sys
 #TODO install pycmd 
-FRAMEWORK_PATH = os.path.dirname(__file__)+'/../..'
+FRAMEWORK_PATH = os.path.dirname(os.path.abspath(__file__))+'/../..'
+
 sys.path.append(FRAMEWORK_PATH)
+from core import Group
+from decorators import command, argument,fuck_command
 
-from pycmd.app import App
-from pycmd.utils import *
-from pycmd.decorators import *
 
-class Command(App):
+class Command(Group):
 	"""docstring for Command"""
-	def __init__(self, arg):
-		super(Command, self).__init__()
-		self.arg = arg
 	
-	@command()
-	@argument('name')
-	def make(ctx, name):
+	@fuck_command()
+	def make(self):
 		#scripts directory
-		currentPath = sys.argv[0]	
+		currentPath = sys.argv[0]
 		print('in command makeeeeeeeeeeeeeee')
 
+# if __name__ == '__main__':
+# 	cmd = Command()
+
+# 	cmd()
