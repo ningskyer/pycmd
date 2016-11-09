@@ -1,30 +1,21 @@
 import os
 import click
-from pycmd.core import Group
 
-class Shell(Group):
-    """docstring for Shell"""
-    def __init__(self, arg):
-        super(Shell, self).__init__()
-        self.arg = arg
-        
 @click.group()
-def cli():
+def shell():
     pass
 
-'''
-make a dirctory
-'''
 
-
-@cli.command()
+@shell.command()
 @click.option('--abs', default=False, help='is absolute path or not,default in current path')
 @click.argument('path')
 def mkdir(abs, path):
-    # get rid of '\' in header
+    '''make a dirctory
+    '''
     path = path.strip()
-    #  get rid of '\' in footer
+    # get rid of '\' in header
     path = path.rstrip("\\")
+    #  get rid of '\' in footer
     if abs:
         # determin whether the path exists
         isExists = os.path.exists(path)
@@ -33,16 +24,14 @@ def mkdir(abs, path):
     else:
         os.makedirs(os.getcwd() + '/' + path)
 
-'''
-remove a dirctory, force optional
-'''
-
-
-@cli.command()
+@shell.command()
 @click.option('--abs', default=False, help='is absolute path or not,default in current path')
 @click.option('--f/--force', default=False, help='remove dir even if it\'s not empty')
 @click.argument('path')
 def rmdir(abs, f, path):
+    '''
+    remove a dirctory, force optional
+    '''
     if not os.path.isdir(path):
         click.echo(path + ' is not a directory')
     else:
@@ -62,7 +51,7 @@ move a file or directory to another place
 '''
 
 
-@cli.command()
+@shell.command()
 @click.argument('src')
 @click.argument('dest')
 def mv(src, dest):
@@ -74,7 +63,7 @@ get resources in current directory
 '''
 
 
-@cli.command()
+@shell.command()
 @click.option('--a/--all', default=False, help='how to show resources in current directory')
 def ls(a):
     click.echo(os.listdir(os.getcwd()))
@@ -84,7 +73,7 @@ make a file by name
 '''
 
 
-@cli.command()
+@shell.command()
 @click.argument('file')
 def touch(file):
     from pathlib import Path
@@ -99,7 +88,7 @@ rename a file or directory
 '''
 
 
-@cli.command()
+@shell.command()
 @click.argument('target')
 @click.argument('newname')
 def rename(target, newname):
@@ -113,7 +102,7 @@ cat a file content
 '''
 
 
-@cli.command()
+@shell.command()
 @click.argument('file')
 def cat():
     return
@@ -123,7 +112,7 @@ rm a file
 '''
 
 
-@cli.command()
+@shell.command()
 @click.argument('file')
 def rm(file):
     if not os.path.exists(file):
@@ -140,7 +129,7 @@ copy a file or directory to another place
 '''
 
 
-@cli.command()
+@shell.command()
 @click.argument('src')
 @click.argument('dest')
 def cp(src, dest):
@@ -183,7 +172,7 @@ def doCopy(src, dest):
 in human friendly way'''
 
 
-@cli.command()
+@shell.command()
 @click.argument('file')
 def size(file):
     click.echo(os.path.getsize(file))

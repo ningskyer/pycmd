@@ -1,23 +1,23 @@
 import os
-import sys
-#TODO install pycmd 
-FRAMEWORK_PATH = os.path.dirname(os.path.abspath(__file__))+'/../..'
+import click
 
-sys.path.append(FRAMEWORK_PATH)
-from core import Group
-from decorators import command, argument,fuck_command
+@click.group()
+def command():
+    pass
 
-
-class Command(Group):
-	"""docstring for Command"""
-	
-	@fuck_command()
-	def make(self):
-		#scripts directory
-		currentPath = sys.argv[0]
-		print('in command makeeeeeeeeeeeeeee')
-
-# if __name__ == '__main__':
-# 	cmd = Command()
-
-# 	cmd()
+@command.command()
+@click.argument('package')
+def register(package):
+	'''register a package to pycmd's scripts
+	'''
+	path = path.strip()
+    # get rid of '\' in header
+	path = path.rstrip("\\")
+    #  get rid of '\' in footer
+	if abs:
+        # determin whether the path exists
+		isExists = os.path.exists(path)
+		if not isExists:
+			os.makedirs(path)
+	else:
+		os.makedirs(os.getcwd() + '/' + path)
